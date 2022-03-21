@@ -18,7 +18,7 @@ import matplotlib.cm as cm
 import torch
 from torchvision import transforms, datasets
 
-import monodepth2.networks
+import monodepth2.networks as networks
 from monodepth2.layers import disp_to_depth
 from monodepth2.utils import download_model_if_doesnt_exist
 from monodepth2.evaluate_depth import STEREO_SCALE_FACTOR
@@ -122,13 +122,13 @@ def create_depth_image(args, file):
             # Saving numpy file
             output_name = os.path.splitext(os.path.basename(image_path))[0]
             scaled_disp, depth = disp_to_depth(disp, 0.1, 100)
-            if args.pred_metric_depth:
-                name_dest_npy = os.path.join(output_directory, "{}_depth.npy".format(output_name))
-                metric_depth = STEREO_SCALE_FACTOR * depth.cpu().numpy()
-                np.save(name_dest_npy, metric_depth)
-            else:
-                name_dest_npy = os.path.join(output_directory, "{}_disp.npy".format(output_name))
-                np.save(name_dest_npy, scaled_disp.cpu().numpy())
+            # if args.pred_metric_depth:
+            name_dest_npy = os.path.join(output_directory, "{}_depth.npy".format(output_name))
+            metric_depth = STEREO_SCALE_FACTOR * depth.cpu().numpy()
+            np.save(name_dest_npy, metric_depth)
+            # else:
+            #     name_dest_npy = os.path.join(output_directory, "{}_disp.npy".format(output_name))
+            #     np.save(name_dest_npy, scaled_disp.cpu().numpy())
 
             # Saving colormapped depth image
             disp_resized_np = disp_resized.squeeze().cpu().numpy()
