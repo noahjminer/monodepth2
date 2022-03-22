@@ -132,9 +132,9 @@ def create_depth_image(args, file):
 
             # Saving colormapped depth image
             disp_resized_np = disp_resized.squeeze().cpu().numpy()
-            vmax = np.percentile(disp_resized_np, 95)
+            vmax = np.percentile(disp_resized_np, 75)
             normalizer = mpl.colors.Normalize(vmin=disp_resized_np.min(), vmax=vmax)
-            mapper = cm.ScalarMappable(norm=normalizer, cmap='magma')
+            mapper = cm.ScalarMappable(norm=normalizer, cmap='gist_gray')
             colormapped_im = (mapper.to_rgba(disp_resized_np)[:, :, :3] * 255).astype(np.uint8)
             im = pil.fromarray(colormapped_im)
 
