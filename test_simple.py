@@ -133,7 +133,7 @@ def create_depth_image_from_frame(args, frame, image_path):
     return name_dest_im
 
 
-def create_depth_image_from_file(args, file):
+def create_depth_image_from_file(args, f):
     if torch.cuda.is_available():
         device = torch.device("cuda")
 
@@ -167,9 +167,9 @@ def create_depth_image_from_file(args, file):
     depth_decoder.eval()
 
     # FINDING INPUT IMAGES
-    if os.path.isfile(file):
+    if os.path.isfile(f):
         # Only testing on a single image
-        paths = [args.image_path]
+        paths = [f]
         output_directory = os.path.dirname(args.image_path)
     else:
         raise Exception("Can not find args.image_path: {}".format(args.image_path))
@@ -210,7 +210,7 @@ def create_depth_image_from_file(args, file):
 
             # Saving colormapped depth image
             disp_resized_np = disp_resized.squeeze().cpu().numpy()
-            vmax = np.percentile(disp_resized_np, 75)
+            vmax = np.percentile(disp_resized_np, 90)
             normalizer = mpl.colors.Normalize(vmin=disp_resized_np.min(), vmax=vmax)
             mapper = cm.ScalarMappable(norm=normalizer, cmap='gist_gray')
             colormapped_im = (mapper.to_rgba(disp_resized_np)[:, :, :3] * 255).astype(np.uint8)
