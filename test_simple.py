@@ -58,6 +58,8 @@ def parse_args():
 def create_depth_image_from_frame(args, frame, image_path):
     if torch.cuda.is_available():
         device = torch.device("cuda")
+    else:
+        device = torch.device("cpu")
 
     download_model_if_doesnt_exist(args.model_name)
     model_path = os.path.join("models", args.model_name)
@@ -139,6 +141,8 @@ def create_depth_image_from_frame(args, frame, image_path):
 def create_depth_image_from_file(args, f):
     if torch.cuda.is_available():
         device = torch.device("cuda")
+    else:
+        device = torch.device("cpu")
 
     download_model_if_doesnt_exist(args.model_name)
     model_path = os.path.join("models", args.model_name)
