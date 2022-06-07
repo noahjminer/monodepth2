@@ -55,14 +55,14 @@ def parse_args():
     return parser.parse_args()
 
 
-def create_depth_image_from_frame(args, frame, image_path):
+def create_depth_image_from_frame(frame):
     if torch.cuda.is_available():
         device = torch.device("cuda")
     else:
         device = torch.device("cpu")
 
-    download_model_if_doesnt_exist(args.model_name)
-    model_path = os.path.join("models", args.model_name)
+    download_model_if_doesnt_exist("mono+stereo_1024x320")
+    model_path = os.path.join("models", "mono+stereo_1024x320")
     print("-> Loading model from ", model_path)
     encoder_path = os.path.join(model_path, "encoder.pth")
     depth_decoder_path = os.path.join(model_path, "depth.pth")
@@ -80,7 +80,7 @@ def create_depth_image_from_frame(args, frame, image_path):
     encoder.to(device)
     encoder.eval()
 
-    output_directory = os.path.dirname(image_path)
+    output_directory = os.getcwd()
 
 
     print("   Loading pretrained decoder")
@@ -111,7 +111,7 @@ def create_depth_image_from_frame(args, frame, image_path):
             disp, (original_height, original_width), mode="bilinear", align_corners=False)
 
         # Saving numpy file
-        output_name = os.path.splitext(os.path.basename(image_path))[0]
+        output_name = os.path.splitext(os.path.basename('frame'))[0]
         scaled_disp, depth = disp_to_depth(disp, 0.1, 100)
         # if args.pred_metric_depth:
         name_dest_npy = os.path.join(output_directory, "{}_depth.npy".format(output_name))
