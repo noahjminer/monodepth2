@@ -112,7 +112,7 @@ def create_depth_image_from_frame(frame):
 
         # Saving numpy file
         output_name = os.path.splitext(os.path.basename('frame'))[0]
-        scaled_disp, depth = disp_to_depth(disp, 0.1, 100)
+        scaled_disp, depth = disp_to_depth(disp, 100, 1000)
         # if args.pred_metric_depth:
         name_dest_npy = os.path.join(output_directory, "{}_depth.npy".format(output_name))
         metric_depth = STEREO_SCALE_FACTOR * depth.cpu().numpy()
@@ -126,6 +126,7 @@ def create_depth_image_from_frame(frame):
         vmax = np.percentile(disp_resized_np, 75)
         normalizer = mpl.colors.Normalize(vmin=disp_resized_np.min(), vmax=vmax)
         mapper = cm.ScalarMappable(norm=normalizer, cmap='gist_gray')
+        # mapper = cm.ScalarMappable(norm=normalizer, cmap='Pastel2')
         colormapped_im = (mapper.to_rgba(disp_resized_np)[:, :, :3] * 255).astype(np.uint8)
         im = pil.fromarray(colormapped_im)
 
